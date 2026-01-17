@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fastlane Vehicles</title>
+</head>
+<body>
+  <h1>Available Vehicles</h1>
+  <div id="list">Loading vehicles...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = " https://<project_ref>.supabase.co/rest/v1/. ";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwY3hhb2lwZXdna2tyZ3lydndjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2OTQ1NzUsImV4cCI6MjA4MzI3MDU3NX0.Q1WqBoy2mQEQNmVE-vJmd951SzWIRN_URQDHiB5r5Mg ";
+
+    const supabase = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    async function loadVehicles() {
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*");
+
+      if (error) {
+        document.getElementById("list").innerText = error.message;
+        return;
+      }
+
+      document.getElementById("list").innerHTML =
+        data.map(v =>
+          `<p>${v.make || ""} ${v.model || ""} - ${v.price || ""}</p>`
+        ).join("");
+    }
+
+    loadVehicles();
+  </script>
+</body>
+</html>
