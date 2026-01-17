@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fastlane Vehicles</title>
+</head>
+<body>
+  <h1>Available Vehicles</h1>
+  <div id="list">Loading vehicles...</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://<project_ref>.supabase.co/rest/v1/. ";
+    const supabaseKey = "sb_publishable_4V5QKMNwiQzf1WPdm9dZiw_Gv79RMOe ";
+
+    const supabase = window.supabase.createClient(
+      supabaseUrl,
+      supabaseKey
+    );
+
+    async function loadVehicles() {
+      const { data, error } = await supabase
+        .from("vehicles")
+        .select("*");
+
+      if (error) {
+        document.getElementById("list").innerText = error.message;
+        return;
+      }
+
+      document.getElementById("list").innerHTML =
+        data.map(v =>
+          `<p>${v.make || ""} ${v.model || ""} - ${v.price || ""}</p>`
+        ).join("");
+    }
+
+    loadVehicles();
+  </script>
+</body>
+</html>
